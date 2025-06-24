@@ -45,7 +45,7 @@ void ConnectAppconfigurationfromLocalhost()
 
         builder.Configuration.AddAzureAppConfiguration(options =>
         {
-            //options.Connect(@"Endpoint=https://kalibrate-appconfiguration.azconfig.io;Id=75me;Secret=yWhWjymdgLKCys0eb26TtKHnu401BPXNOirFAG3Sm9rFWaQH79ZsJQQJ99BFACHYHv6Y4SklAAACAZAC3SsQ")
+            // we can also use connection string with access keys for the appconfiguration
             options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential)
                    //.Select("*") // Loads key without any Label
                    .Select("*", labelFilter: "App1")       // Load keys with label "App2"
