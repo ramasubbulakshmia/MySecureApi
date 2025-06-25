@@ -38,7 +38,7 @@ namespace MySecureApi.Controllers
         public IActionResult GetWelcomeNote()
         {
             object? welcomenote = _configuration.GetValue<string>("welcomenote");
-            return Ok(new { WelcomeNote = welcomenote?.ToString() });
+            return Ok(new { WelcomeNote = string.Concat("Hello ", welcomenote?.ToString()) });
         }
     }
 }
