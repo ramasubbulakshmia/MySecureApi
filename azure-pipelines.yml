@@ -11,7 +11,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   webAppName: 'kalibrate-app'  # CHANGE this
-  azureSubscription: 'Microsoft Azure Sponsorship-CAF'  # CHANGE this
+  azureSubscription: 'sp-kalibrate-caf'  # CHANGE this
 
 steps:
 - task: UseDotNet@2
