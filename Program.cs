@@ -108,7 +108,7 @@ void ConnectAppconfigurationFromAzure()
         {
             //options.Connect(@"Endpoint=https://kalibrate-appconfiguration.azconfig.io;Id=75me;Secret=yWhWjymdgLKCys0eb26TtKHnu401BPXNOirFAG3Sm9rFWaQH79ZsJQQJ99BFACHYHv6Y4SklAAACAZAC3SsQ")
             options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential_ApptoAppConfig)
-              .Select("*", labelFilter: "App1")// Optional: apply label filter
+              .Select("*", labelFilter: "App2")// Optional: apply label filter
                .Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
                .ConfigureKeyVault(kv =>
                {
