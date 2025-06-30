@@ -40,5 +40,12 @@ namespace MySecureApi.Controllers
             object? welcomenote = _configuration.GetValue<string>("welcomenote");
             return Ok(new { WelcomeNote = string.Concat("Hello ", welcomenote?.ToString()) });
         }
+
+        [HttpGet("autorefresh")]
+        public IActionResult GetAutoRefresh()
+        {
+            object? autorefresh = _configuration.GetValue<string>("autorefresh");
+            return Ok(new { AutoRefresh = string.Concat("Hello ", autorefresh?.ToString()) });
+        }
     }
 }
