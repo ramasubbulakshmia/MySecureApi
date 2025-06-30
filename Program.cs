@@ -1,5 +1,5 @@
 using Azure.Identity;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;                 
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 var builder = WebApplication.CreateBuilder(args);
 //ConnectAppconfigurationfromLocalhost();
@@ -121,17 +121,20 @@ void ConnectAppconfigurationFromAzure()
 
         builder.Configuration.AddAzureAppConfiguration(options =>
         {
-            options.Connect("https://kalibrate-appconfiguration.azconfig.io")
+            options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential_ApptoAppConfig)
                    .UseFeatureFlags()
-                    .Select("*", labelFilter: "KMobWebAPI")       // Load keys with label "KMobWebAPI"
-                    .Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
+                   .Select("*", labelFilter: "KMobWebAPI")
+                   .Select("*", labelFilter: LabelFilter.Null)
                    .ConfigureRefresh(refresh =>
                    {
                        refresh.Register("App:Title", refreshAll: true)
-                              .SetRefreshInterval(TimeSpan.FromSeconds(20));
+                              .SetRefreshInterval(TimeSpan.FromSeconds(20));  //To auto refresh the values which never requires the webapp to restart 
+                   })
+                   .ConfigureKeyVault(kv =>
+                   {
+                       kv.SetCredential(credential_Appconfigtokv);
                    });
         });
-
     }
     catch (Exception ex)
     {
