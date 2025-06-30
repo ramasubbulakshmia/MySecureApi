@@ -4,13 +4,8 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Declare refresher globally
-IConfigurationRefresher? refresher = null;
-
-
 //ConnectAppconfigurationfromLocalhost();
-ConnectAppconfigurationFromAzure();
+ConnectAppconfigurationFromAzure(builder);
 
 // Add services
 builder.Services.AddEndpointsApiExplorer();
@@ -18,19 +13,23 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAzureAppConfiguration(); // Service registration for DI, telemetry, refresh
 
+
 var app = builder.Build();
 
 // Middleware to enable Azure App Configuration
 app.UseAzureAppConfiguration();
 
-// Middleware to auto-refresh settings using sentinel key
+
+// Auto-refresh using built-in refresher provider
 app.Use(async (context, next) =>
 {
-    if (refresher != null)
+    var refresherProvider = context.RequestServices.GetRequiredService<IConfigurationRefresherProvider>();
+    foreach (var refresher in refresherProvider.Refreshers)
     {
         await refresher.TryRefreshAsync();
     }
-    await next.Invoke();
+
+    await next();
 });
 
 app.UseSwagger();
@@ -88,7 +87,7 @@ void ConnectAppconfigurationfromLocalhost()
     }
 }
 
-void ConnectAppconfigurationFromAzure()
+void ConnectAppconfigurationFromAzure(WebApplicationBuilder builder)
 {
 
     /*After deploying to Azure App Service
@@ -158,9 +157,8 @@ void ConnectAppconfigurationFromAzure()
                    });
 
             // Capture the refresher to use in middleware
-            refresher = options.GetRefresher();
+          //  refresher = options.GetRefresher();
         });
-
         
     }
     catch (Exception ex)
