@@ -1,6 +1,7 @@
 using Azure.Identity;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
+
 var builder = WebApplication.CreateBuilder(args);
 //ConnectAppconfigurationfromLocalhost();
 ConnectAppconfigurationFromAzure();
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseAzureAppConfiguration();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -135,6 +137,9 @@ void ConnectAppconfigurationFromAzure()
                        kv.SetCredential(credential_Appconfigtokv);
                    });
         });
+
+        // Connect to Azure App Configuration
+        builder.Services.AddAzureAppConfiguration();
     }
     catch (Exception ex)
     {
