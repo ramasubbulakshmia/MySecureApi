@@ -55,6 +55,10 @@ void ConnectAppconfigurationfromLocalhost()
                    });
         });
 
+
+        // Connect to Azure App Configuration
+        builder.Services.AddAzureAppConfiguration();
+
     }
     catch (Exception ex)
     {
@@ -103,16 +107,29 @@ void ConnectAppconfigurationFromAzure()
         var credential_Appconfigtokv = new DefaultAzureCredential(credentialOptions_ApptoAppconfig);
 
 
+        //builder.Configuration.AddAzureAppConfiguration(options =>
+        //{
+        //    //options.Connect(@"Endpoint=https://kalibrate-appconfiguration.azconfig.io;Id=75me;Secret=yWhWjymdgLKCys0eb26TtKHnu401BPXNOirFAG3Sm9rFWaQH79ZsJQQJ99BFACHYHv6Y4SklAAACAZAC3SsQ")
+        //    options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential_ApptoAppConfig)
+        //       .Select("*", labelFilter: "KMobWebAPI")// Optional: apply label filter
+        //       .Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
+        //       .ConfigureKeyVault(kv =>
+        //       {
+        //           kv.SetCredential(credential_Appconfigtokv);
+        //       });
+        //});
+
         builder.Configuration.AddAzureAppConfiguration(options =>
         {
-            //options.Connect(@"Endpoint=https://kalibrate-appconfiguration.azconfig.io;Id=75me;Secret=yWhWjymdgLKCys0eb26TtKHnu401BPXNOirFAG3Sm9rFWaQH79ZsJQQJ99BFACHYHv6Y4SklAAACAZAC3SsQ")
-            options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential_ApptoAppConfig)
-              .Select("*", labelFilter: "App1")// Optional: apply label filter
-               .Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
-               .ConfigureKeyVault(kv =>
-               {
-                   kv.SetCredential(credential_Appconfigtokv);
-               });
+            options.Connect("https://kalibrate-appconfiguration.azconfig.io")
+                   .UseFeatureFlags()
+                    .Select("*", labelFilter: "KMobWebAPI")       // Load keys with label "KMobWebAPI"
+                    .Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
+                   .ConfigureRefresh(refresh =>
+                   {
+                       refresh.Register("App:Title", refreshAll: true)
+                              .SetRefreshInterval(TimeSpan.FromSeconds(20));
+                   });
         });
 
     }
