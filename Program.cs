@@ -90,7 +90,7 @@ try
                .ConfigureRefresh(refresh =>
                {
                    // Sentinel key - triggers a full refresh when updated
-                   refresh.Register("autorefresh", refreshAll: true, label:"KMobWebAPI");
+                   refresh.Register("autorefresh", refreshAll: true, label: "AlertAndScheduler");
                })
                .ConfigureKeyVault(kv =>
                {
