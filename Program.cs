@@ -129,8 +129,7 @@ void ConnectAppconfigurationFromAzure()
                    .Select("*", labelFilter: LabelFilter.Null)
                    .ConfigureRefresh(refresh =>
                    {
-                       refresh.Register("App:Title", refreshAll: true)
-                              .SetRefreshInterval(TimeSpan.FromSeconds(20));  //To auto refresh the values which never requires the webapp to restart 
+                       refresh.Register("welcomenote", refreshAll: true);                              
                    })
                    .ConfigureKeyVault(kv =>
                    {
