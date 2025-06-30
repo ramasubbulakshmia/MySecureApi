@@ -129,12 +129,14 @@ void ConnectAppconfigurationFromAzure()
                    .Select("*", labelFilter: LabelFilter.Null)
                    .ConfigureRefresh(refresh =>
                    {
-                       refresh.Register("welcomenote", refreshAll: true);                              
+                       refresh.Register("welcomenote", refreshAll: true)
+                        .SetRefreshInterval(TimeSpan.FromSeconds(30));
                    })
                    .ConfigureKeyVault(kv =>
                    {
                        kv.SetCredential(credential_Appconfigtokv);
                    });
+
         });
 
         // Connect to Azure App Configuration
