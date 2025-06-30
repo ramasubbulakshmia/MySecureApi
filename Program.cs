@@ -3,6 +3,12 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Declare refresher globally
+IConfigurationRefresher? refresher = null;
+
+
 //ConnectAppconfigurationfromLocalhost();
 ConnectAppconfigurationFromAzure();
 
@@ -10,9 +16,22 @@ ConnectAppconfigurationFromAzure();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAzureAppConfiguration(); // Service registration for DI, telemetry, refresh
 
 var app = builder.Build();
+
+// Middleware to enable Azure App Configuration
 app.UseAzureAppConfiguration();
+
+// Middleware to auto-refresh settings using sentinel key
+app.Use(async (context, next) =>
+{
+    if (refresher != null)
+    {
+        await refresher.TryRefreshAsync();
+    }
+    await next.Invoke();
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -129,18 +148,20 @@ void ConnectAppconfigurationFromAzure()
                    .Select("*", labelFilter: LabelFilter.Null)
                    .ConfigureRefresh(refresh =>
                    {
+                       // Sentinel key - triggers a full refresh when updated
                        refresh.Register("welcomenote", refreshAll: true)
-                        .SetRefreshInterval(TimeSpan.FromSeconds(30));
+                              .SetRefreshInterval(TimeSpan.FromSeconds(30));
                    })
                    .ConfigureKeyVault(kv =>
                    {
                        kv.SetCredential(credential_Appconfigtokv);
                    });
 
+            // Capture the refresher to use in middleware
+            refresher = options.GetRefresher();
         });
 
-        // Connect to Azure App Configuration
-        builder.Services.AddAzureAppConfiguration();
+        
     }
     catch (Exception ex)
     {
