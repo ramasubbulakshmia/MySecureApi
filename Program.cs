@@ -84,13 +84,13 @@ try
         //options.Connect(@"Endpoint=https://kalibrate-appconfiguration.azconfig.io;Id=75me;Secret=yWhWjymdgLKCys0eb26TtKHnu401BPXNOirFAG3Sm9rFWaQH79ZsJQQJ99BFACHYHv6Y4SklAAACAZAC3SsQ")
         options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential_ApptoAppConfig)
                               //.Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
-                              //.Select("*", labelFilter: "AlertAndScheduler")
-                              .Select("*", labelFilter: "KMobWebAPI")
+                              .Select("*", labelFilter: "AlertAndScheduler")
+                              //.Select("*", labelFilter: "KMobWebAPI")
 
                .ConfigureRefresh(refresh =>
                {
                    // Sentinel key - triggers a full refresh when updated
-                   refresh.Register("autorefresh", refreshAll: true, label: "KMobWebAPI");
+                   refresh.Register("autorefresh", refreshAll: true, label: "AlertAndScheduler");
                })
                .ConfigureKeyVault(kv =>
                {
