@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 var builder = WebApplication.CreateBuilder(args);
 
 
-#region Local Run
+//#region Local Run
 ////Local Run
 //// Needed Authorizations when using AzureCliCredential:
 //// 1. Add role assignment " App Configuration Data Reader" on App Configuration to the user account.
@@ -21,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 //    {
 //        // we can also use connection string with access keys for the appconfiguration
 //        options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential)
+//               .Select("*", labelFilter: "AlertAndScheduler")
 //               .Select("*", labelFilter: "KMobWebAPI")
 //               .ConfigureRefresh(refresh =>
 //               {
@@ -38,7 +39,7 @@ var builder = WebApplication.CreateBuilder(args);
 //    Console.WriteLine("App Configuration Error: " + ex.Message);
 //    throw;
 //}
-#endregion
+//#endregion
 
 
 #region Azure Run
@@ -84,7 +85,7 @@ try
         //options.Connect(@"Endpoint=https://kalibrate-appconfiguration.azconfig.io;Id=75me;Secret=yWhWjymdgLKCys0eb26TtKHnu401BPXNOirFAG3Sm9rFWaQH79ZsJQQJ99BFACHYHv6Y4SklAAACAZAC3SsQ")
         options.Connect(new Uri("https://kalibrate-appconfiguration.azconfig.io"), credential_ApptoAppConfig)
                               //.Select("*", labelFilter: LabelFilter.Null) // Load keys without any label
-                              //.Select("*", labelFilter: "AlertAndScheduler")
+                              .Select("*", labelFilter: "AlertAndScheduler")
                               .Select("*", labelFilter: "KMobWebAPI")
 
                .ConfigureRefresh(refresh =>
